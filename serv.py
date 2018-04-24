@@ -77,7 +77,7 @@ def users():
         return make_response(jsonify('user does not exists'), 403)
     if u['password'] != user['password']:
         return make_response(jsonify('not authentified'), 401)
-    ret = db.users.find({}, {'_id': 0, 'password': 0, 'contacts': 0})
+    ret = db.users.find({'visible': True}, {'_id': 0, 'password': 0, 'contacts': 0})
     return make_response(jsonify(dumps(ret)), 200)
 
 @app.route('/visible', methods=['POST'])
@@ -91,7 +91,7 @@ def visible():
         return make_response(jsonify('user does not exists'), 403)
     if u['password'] != user['password']:
         return make_response(jsonify('not authentified'), 401)
-    res = db.users.update_one({'username': user['username']}, {'$set': {'visible':request.get.json('visible')}})
+    res = db.users.update_one({'username': user['username']}, {'$set': {'visible':request.json.get('visible')}})
     return make_response(jsonify('successfully changed'), 200)
 
 @app.route('/history', methods=['GET', 'POST'])
